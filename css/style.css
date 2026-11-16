@@ -1,1 +1,363 @@
-/* Campus Life Super App - custom styles (loaded after Bootstrap) */
+/* ==========================================================================
+   Campus Life Super App - custom styles
+   Loaded AFTER Bootstrap 5, so these rules override Bootstrap defaults.
+   Layout: Flexbox. Breakpoints: tablet (<= 991.98px) and mobile (<= 767.98px),
+   matching Bootstrap's lg and md breakpoints.
+   ========================================================================== */
+
+/* ---------- 1. Theme colors (CSS variables) ----------
+   Light theme is the default; Bootstrap's data-bs-theme="dark" attribute
+   (set on <html> by js/script.js) swaps in the dark values below. */
+:root {
+  --brand: #4b2e83;        /* Millsaps-style purple */
+  --brand-dark: #3a2266;
+  --header-bg: #4b2e83;
+  --link: #4b2e83;         /* purple on white: contrast about 10:1 */
+  --card-hover-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+}
+
+[data-bs-theme="dark"] {
+  --header-bg: #2b1a52;
+  --link: #c4b0f0;         /* light purple on dark: contrast about 9:1 */
+  --card-hover-shadow: 0 .5rem 1rem rgba(0, 0, 0, .6);
+}
+
+/* ---------- 2. Base / page frame ----------
+   Flex column + min-height keeps the footer at the bottom of short pages. */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;                 /* main grows to fill the space between header and footer */
+  width: 100%;
+}
+
+a {
+  color: var(--link);
+}
+
+/* Visible focus state for every interactive element (accessibility) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+.form-check-input:focus-visible {
+  outline: 3px solid #f0a500;
+  outline-offset: 2px;
+}
+
+/* Skip link sits at the top and appears only when focused */
+.skip-link {
+  position: absolute;
+  top: .5rem;
+  left: .5rem;
+  z-index: 2000;
+  padding: .5rem 1rem;
+  background: #fff;
+  color: #000;
+  border-radius: .25rem;
+}
+
+/* ---------- 3. Bootstrap overrides: brand colors ---------- */
+.btn-primary {
+  --bs-btn-bg: var(--brand);
+  --bs-btn-border-color: var(--brand);
+  --bs-btn-hover-bg: var(--brand-dark);
+  --bs-btn-hover-border-color: var(--brand-dark);
+  --bs-btn-active-bg: var(--brand-dark);
+  --bs-btn-active-border-color: var(--brand-dark);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--link);
+  --bs-btn-border-color: var(--link);
+  --bs-btn-hover-bg: var(--link);
+  --bs-btn-hover-border-color: var(--link);
+  --bs-btn-active-bg: var(--link);
+  --bs-btn-active-border-color: var(--link);
+}
+
+/* Light-purple fill in dark mode needs dark text to stay readable */
+[data-bs-theme="dark"] .btn-primary,
+[data-bs-theme="dark"] .btn-outline-primary {
+  --bs-btn-hover-color: #1a1a1a;
+  --bs-btn-active-color: #1a1a1a;
+}
+
+[data-bs-theme="dark"] .btn-primary {
+  --bs-btn-color: #fff;
+}
+
+.text-bg-primary {
+  background-color: var(--brand) !important;
+}
+
+/* ---------- 4. Header + navigation (Flexbox via Bootstrap navbar) ---------- */
+.site-header {
+  background: var(--header-bg);
+}
+
+.site-header .navbar-brand,
+.site-header .nav-link {
+  color: rgba(255, 255, 255, .92);
+}
+
+.site-header .navbar-brand {
+  font-weight: 700;
+}
+
+.site-header .nav-link:hover,
+.site-header .nav-link:focus-visible {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Active-page highlight */
+.site-header .nav-link.active {
+  color: #fff;
+  font-weight: 700;
+  border-bottom: 3px solid #f0a500;
+}
+
+/* The hamburger icon is dark by default; invert it to show on the purple bar */
+.site-header .navbar-toggler {
+  border-color: rgba(255, 255, 255, .7);
+}
+
+.site-header .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+/* ---------- 5. Home page ---------- */
+.banner-img {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  object-fit: cover;
+}
+
+/* Quick links: a flex row that wraps; buttons share the space evenly */
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.quick-links .btn {
+  flex: 1 1 200px;
+}
+
+.highlight-card {
+  transition: box-shadow .15s ease-in-out;
+}
+
+.highlight-card:hover,
+.highlight-card:focus-visible {
+  box-shadow: var(--card-hover-shadow);
+}
+
+.highlight-thumb {
+  border-radius: .5rem;
+  flex-shrink: 0;
+}
+
+/* ---------- 6. Events page ---------- */
+/* Search box and favorites switch sit side by side */
+.filter-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+
+.favorites-toggle {
+  padding-bottom: .4rem;
+  white-space: nowrap;
+}
+
+/* Category chips (also used on the Dining page) */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+}
+
+/* Event cards: flex-wrap grid, two per row on desktop */
+.event-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.event-card {
+  flex: 1 1 calc(50% - .5rem);
+  min-width: 260px;
+}
+
+.event-card .card-body {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Calendar-style date badge */
+.date-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 3.5rem;
+  padding: .4rem .5rem;
+  background: var(--brand);
+  color: #fff;
+  border-radius: .5rem;
+  line-height: 1.1;
+}
+
+.date-badge strong {
+  font-size: 1.5rem;
+}
+
+/* ---------- 7. Map page ---------- */
+/* Sidebar + map side by side */
+.map-layout {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.map-sidebar {
+  flex: 0 0 320px;
+}
+
+.map-panel {
+  flex: 1;
+  min-width: 0;            /* lets the flex child shrink instead of overflowing */
+}
+
+.spot-list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.map-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 420px;
+  border: 2px dashed var(--bs-border-color);
+  border-radius: .5rem;
+  background: var(--bs-tertiary-bg);
+  text-align: center;
+}
+
+/* ---------- 8. Footer ---------- */
+.site-footer {
+  background: var(--bs-tertiary-bg);
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.footer-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+/* ==========================================================================
+   RESPONSIVE: TABLET (768px - 991px)
+   Bootstrap already stacks the banner above the weather card here; we narrow
+   the map sidebar and tighten spacing so the two columns still fit.
+   ========================================================================== */
+@media (max-width: 991.98px) {
+  h1 {
+    font-size: 1.9rem;
+  }
+
+  .map-sidebar {
+    flex-basis: 260px;
+  }
+
+  .map-placeholder {
+    min-height: 340px;
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE: MOBILE (under 768px)
+   Hamburger menu (Bootstrap), everything in one column, tap targets >= 44px.
+   ========================================================================== */
+@media (max-width: 767.98px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  /* Bigger tap targets in the opened menu and on buttons */
+  .site-header .nav-link,
+  .btn,
+  .chip {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .site-header .nav-link {
+    padding: .75rem .5rem;
+  }
+
+  .site-header .nav-link.active {
+    border-bottom: 0;
+    border-left: 4px solid #f0a500;
+    padding-left: .75rem;
+  }
+
+  /* Quick links become a 2 x 2 grid */
+  .quick-links .btn {
+    flex: 1 1 calc(50% - .5rem);
+    justify-content: center;
+  }
+
+  /* Search + favorites stack */
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .75rem;
+  }
+
+  /* One event card per row */
+  .event-card {
+    flex-basis: 100%;
+  }
+
+  /* Map sidebar goes above the map, full width */
+  .map-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .map-sidebar {
+    flex-basis: auto;
+  }
+
+  .map-placeholder {
+    min-height: 280px;
+  }
+
+  .spot-list {
+    max-height: 240px;
+  }
+
+  /* Footer collapses to a short stack */
+  .footer-grid {
+    flex-direction: column;
+    gap: .75rem;
+  }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
