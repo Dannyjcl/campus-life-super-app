@@ -16,11 +16,148 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- TODO (Checkpoint 2): shared header, nav bar and footer -->
+  <!-- Skip link: lets keyboard users jump past the nav -->
+  <a class="visually-hidden-focusable skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ===== HEADER + NAV (identical on every page; the current page gets "active") ===== -->
+  <header class="site-header">
+    <nav class="navbar navbar-expand-md" aria-label="Main navigation">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">&#127891; Campus Life @ Millsaps</a>
+        <!-- Hamburger button: collapses the nav below 768px (Bootstrap collapse) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false"
+                aria-label="Toggle navigation menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+          <ul class="navbar-nav ms-auto mb-2 mb-md-0 align-items-md-center">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="events.html" aria-current="page">Events</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="dining.html">Dining</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="map.html">Map</a>
+            </li>
+            <li class="nav-item ms-md-3">
+              <!-- Dark/light theme toggle; behavior added in js/script.js -->
+              <button id="themeToggle" type="button" class="btn btn-outline-light btn-sm" aria-pressed="false">
+                &#9680; Theme
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
   <main id="main-content" class="container py-4">
     <h1>Campus Events</h1>
-    <p>Placeholder content for events.html.</p>
+
+    <!-- Search + filters (wired up with JavaScript in a later checkpoint) -->
+    <section class="filter-panel mb-3" aria-label="Search and filter events">
+      <div class="filter-row">
+        <div class="flex-grow-1">
+          <label for="eventSearch" class="form-label mb-1">Search events</label>
+          <input type="search" id="eventSearch" class="form-control" placeholder="Type to search events (title, place)&hellip;">
+        </div>
+        <div class="form-check form-switch favorites-toggle">
+          <input class="form-check-input" type="checkbox" role="switch" id="favoritesOnly">
+          <label class="form-check-label" for="favoritesOnly">&#9733; Favorites only <span class="badge text-bg-secondary">In progress</span></label>
+        </div>
+      </div>
+      <div class="chip-row mt-3" role="group" aria-label="Filter by category" id="categoryChips">
+        <button type="button" class="btn btn-sm btn-outline-primary chip active" data-category="All" aria-pressed="true">All</button>
+        <button type="button" class="btn btn-sm btn-outline-primary chip" data-category="Academic" aria-pressed="false">Academic</button>
+        <button type="button" class="btn btn-sm btn-outline-primary chip" data-category="Arts" aria-pressed="false">Arts</button>
+        <button type="button" class="btn btn-sm btn-outline-primary chip" data-category="Athletics" aria-pressed="false">Athletics</button>
+        <button type="button" class="btn btn-sm btn-outline-primary chip" data-category="Greek Life" aria-pressed="false">Greek Life</button>
+        <button type="button" class="btn btn-sm btn-outline-primary chip" data-category="Social" aria-pressed="false">Social</button>
+      </div>
+    </section>
+
+    <!-- Result count (announced to screen readers when it changes) -->
+    <p id="eventCount" class="fw-semibold" aria-live="polite">Showing 3 of 3 events</p>
+
+    <div class="row g-4">
+      <!-- Event cards. Placeholder cards for now; JS will render these from a data array. -->
+      <section class="col-lg-8" aria-label="Event list">
+        <div id="eventList" class="event-grid">
+          <article class="card event-card">
+            <div class="card-body">
+              <div class="date-badge" aria-hidden="true"><span>NOV</span><strong>12</strong></div>
+              <div>
+                <span class="badge text-bg-primary">Academic</span>
+                <h2 class="h5 mt-1">Event title</h2>
+                <a href="map.html">&#128205; Location &rarr; map</a>
+              </div>
+            </div>
+          </article>
+          <article class="card event-card">
+            <div class="card-body">
+              <div class="date-badge" aria-hidden="true"><span>NOV</span><strong>14</strong></div>
+              <div>
+                <span class="badge text-bg-primary">Arts</span>
+                <h2 class="h5 mt-1">Event title</h2>
+                <a href="map.html">&#128205; Location &rarr; map</a>
+              </div>
+            </div>
+          </article>
+          <article class="card event-card">
+            <div class="card-body">
+              <div class="date-badge" aria-hidden="true"><span>NOV</span><strong>15</strong></div>
+              <div>
+                <span class="badge text-bg-primary">Athletics</span>
+                <h2 class="h5 mt-1">Event title</h2>
+                <a href="map.html">&#128205; Location &rarr; map</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Sidebar: holidays + favorites (both In progress) -->
+      <aside class="col-lg-4" aria-label="Holidays and favorites">
+        <section class="card mb-3">
+          <div class="card-body">
+            <h2 class="h5">Upcoming holidays / breaks</h2>
+            <!-- TODO: fill from the Nager.Date API (see js/script.js placeholder) -->
+            <p class="mb-0 text-muted">Holiday list coming soon <span class="badge text-bg-secondary">In progress</span></p>
+          </div>
+        </section>
+        <section class="card">
+          <div class="card-body">
+            <h2 class="h5">&#9733; My favorites</h2>
+            <p class="mb-0 text-muted">No favorites yet - tap the star. <span class="badge text-bg-secondary">In progress</span></p>
+          </div>
+        </section>
+      </aside>
+    </div>
   </main>
+
+  <!-- ===== FOOTER (identical on every page) ===== -->
+  <footer class="site-footer mt-5 py-4">
+    <div class="container footer-grid">
+      <div>
+        <h2 class="h6">Pages</h2>
+        <p class="mb-0"><a href="index.html">Home</a> &middot; <a href="events.html">Events</a> &middot;
+          <a href="dining.html">Dining</a> &middot; <a href="map.html">Map</a></p>
+      </div>
+      <div>
+        <h2 class="h6">Data credits</h2>
+        <p class="mb-0">Open-Meteo &middot; Nager.Date &middot; OpenStreetMap / Leaflet</p>
+      </div>
+      <div>
+        <p class="mb-0 small">Student project, not an official Millsaps site.</p>
+      </div>
+    </div>
+  </footer>
 
   <!-- Bootstrap JS bundle (needed for the mobile hamburger menu) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

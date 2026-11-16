@@ -16,11 +16,140 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- TODO (Checkpoint 2): shared header, nav bar and footer -->
+  <!-- Skip link: lets keyboard users jump past the nav -->
+  <a class="visually-hidden-focusable skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ===== HEADER + NAV (identical on every page; the current page gets "active") ===== -->
+  <header class="site-header">
+    <nav class="navbar navbar-expand-md" aria-label="Main navigation">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">&#127891; Campus Life @ Millsaps</a>
+        <!-- Hamburger button: collapses the nav below 768px (Bootstrap collapse) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false"
+                aria-label="Toggle navigation menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+          <ul class="navbar-nav ms-auto mb-2 mb-md-0 align-items-md-center">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="events.html">Events</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="dining.html" aria-current="page">Dining</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="map.html">Map</a>
+            </li>
+            <li class="nav-item ms-md-3">
+              <!-- Dark/light theme toggle; behavior added in js/script.js -->
+              <button id="themeToggle" type="button" class="btn btn-outline-light btn-sm" aria-pressed="false">
+                &#9680; Theme
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
   <main id="main-content" class="container py-4">
     <h1>Dining</h1>
-    <p>Placeholder content for dining.html.</p>
+    <p id="diningClock" class="text-muted">Live clock and open/closed status <span class="badge text-bg-secondary">In progress</span></p>
+
+    <!-- Meal-type filter chips -->
+    <div class="chip-row mb-4" role="group" aria-label="Show meal">
+      <span class="me-2 fw-semibold">Show meal:</span>
+      <button type="button" class="btn btn-sm btn-outline-primary chip active" aria-pressed="true">All</button>
+      <button type="button" class="btn btn-sm btn-outline-primary chip" aria-pressed="false">Breakfast</button>
+      <button type="button" class="btn btn-sm btn-outline-primary chip" aria-pressed="false">Lunch</button>
+      <button type="button" class="btn btn-sm btn-outline-primary chip" aria-pressed="false">Dinner</button>
+      <button type="button" class="btn btn-sm btn-outline-primary chip" aria-pressed="false">Late night</button>
+    </div>
+
+    <!-- One card per dining location (placeholder hours until dining data is added) -->
+    <section class="row g-4 mb-5" aria-label="Dining locations">
+      <article class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <img src="images/dining-hall.svg" class="card-img-top" alt="Placeholder image of the dining hall" width="600" height="300">
+          <div class="card-body">
+            <h2 class="h5">Dining hall <span class="badge text-bg-success">OPEN</span></h2>
+            <p class="small text-muted">Closes in 1h 20m (sample status)</p>
+            <h3 class="h6">Today&rsquo;s hours</h3>
+            <ul class="small"><li>Breakfast</li><li>Lunch</li><li>Dinner</li></ul>
+            <p class="small mb-2"><strong>Menu:</strong> coming soon</p>
+            <a href="map.html">View on map &rarr;</a>
+          </div>
+        </div>
+      </article>
+      <article class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <img src="images/cafe.svg" class="card-img-top" alt="Placeholder image of the cafe" width="600" height="300">
+          <div class="card-body">
+            <h2 class="h5">Cafe <span class="badge text-bg-secondary">CLOSED</span></h2>
+            <p class="small text-muted">Opens at 5:00 PM (sample status)</p>
+            <h3 class="h6">Today&rsquo;s hours</h3>
+            <ul class="small"><li>Lunch</li><li>Dinner</li></ul>
+            <p class="small mb-2"><strong>Menu:</strong> coming soon</p>
+            <a href="map.html">View on map &rarr;</a>
+          </div>
+        </div>
+      </article>
+      <article class="col-md-6 col-lg-4">
+        <div class="card h-100">
+          <img src="images/grab-and-go.svg" class="card-img-top" alt="Placeholder image of the grab and go counter" width="600" height="300">
+          <div class="card-body">
+            <h2 class="h5">Grab &amp; go <span class="badge text-bg-secondary">CLOSED</span></h2>
+            <p class="small text-muted">Opens tomorrow 7:30 AM (sample status)</p>
+            <h3 class="h6">Today&rsquo;s hours</h3>
+            <ul class="small"><li>Breakfast</li><li>Late night</li></ul>
+            <p class="small mb-2"><strong>Menu:</strong> coming soon</p>
+            <a href="map.html">View on map &rarr;</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Weekly hours: a real table with header cells for accessibility -->
+    <section aria-labelledby="hours-heading">
+      <h2 id="hours-heading" class="h4">Weekly hours</h2>
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <caption class="visually-hidden">Weekly hours by dining location (placeholder times)</caption>
+          <thead>
+            <tr><th scope="col">Location</th><th scope="col">Mon&ndash;Fri</th><th scope="col">Saturday</th><th scope="col">Sunday</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Dining hall</th><td>hh:mm &ndash; hh:mm</td><td>hh:mm &ndash; hh:mm</td><td>hh:mm &ndash; hh:mm</td></tr>
+            <tr><th scope="row">Cafe</th><td>hh:mm &ndash; hh:mm</td><td>hh:mm &ndash; hh:mm</td><td>Closed</td></tr>
+            <tr><th scope="row">Grab &amp; go</th><td>hh:mm &ndash; hh:mm</td><td>hh:mm &ndash; hh:mm</td><td>hh:mm &ndash; hh:mm</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
   </main>
+
+  <!-- ===== FOOTER (identical on every page) ===== -->
+  <footer class="site-footer mt-5 py-4">
+    <div class="container footer-grid">
+      <div>
+        <h2 class="h6">Pages</h2>
+        <p class="mb-0"><a href="index.html">Home</a> &middot; <a href="events.html">Events</a> &middot;
+          <a href="dining.html">Dining</a> &middot; <a href="map.html">Map</a></p>
+      </div>
+      <div>
+        <h2 class="h6">Data credits</h2>
+        <p class="mb-0">Open-Meteo &middot; Nager.Date &middot; OpenStreetMap / Leaflet</p>
+      </div>
+      <div>
+        <p class="mb-0 small">Student project, not an official Millsaps site.</p>
+      </div>
+    </div>
+  </footer>
 
   <!-- Bootstrap JS bundle (needed for the mobile hamburger menu) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

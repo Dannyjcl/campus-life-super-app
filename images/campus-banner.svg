@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" role="img" aria-label="Millsaps campus banner (placeholder)">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4b2e83"/><stop offset="1" stop-color="#8a6bbf"/></linearGradient></defs>
+  <rect width="1200" height="400" fill="url(#g)"/>
+  <text x="50%" y="50%" fill="#fff" font-family="Arial, sans-serif" font-size="44" text-anchor="middle" dominant-baseline="middle">Millsaps campus banner (placeholder)</text>
+</svg>
