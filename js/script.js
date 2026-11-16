@@ -270,11 +270,150 @@ function initMealFilter() {
 }
 
 /* ==========================================================================
-   8. START-UP: run each section once the page's HTML is ready
+   8. HOME PAGE: LIVE WEATHER (Open-Meteo API, no API key needed)
+   Flow: show "Loading" -> fetch -> check response.ok -> parse JSON ->
+   render. Any failure lands in the catch block, which shows a friendly
+   message and a Retry button instead of a blank widget or a console crash.
+   Docs: https://open-meteo.com/en/docs
+   ========================================================================== */
+// Jackson, MS coordinates (from the wireframe)
+const JACKSON = { latitude: 32.32, longitude: -90.18 };
+
+// Request: current conditions + daily highs/lows, in Fahrenheit, Central time.
+// forecast_days=4 returns today plus the next 3 days.
+const WEATHER_URL =
+  'https://api.open-meteo.com/v1/forecast' +
+  `?latitude=${JACKSON.latitude}&longitude=${JACKSON.longitude}` +
+  '&current=temperature_2m,weather_code' +
+  '&daily=weather_code,temperature_2m_max,temperature_2m_min' +
+  '&temperature_unit=fahrenheit&timezone=America%2FChicago&forecast_days=4';
+
+// Open-Meteo returns a numeric WMO weather code; translate it to text + an emoji
+function describeWeather(code) {
+  if (code === 0) return { text: 'Clear sky', icon: '☀️' };
+  if (code === 1) return { text: 'Mostly clear', icon: '\u{1F324}️' };
+  if (code === 2) return { text: 'Partly cloudy', icon: '⛅' };
+  if (code === 3) return { text: 'Overcast', icon: '☁️' };
+  if (code === 45 || code === 48) return { text: 'Fog', icon: '\u{1F32B}️' };
+  if (code >= 51 && code <= 57) return { text: 'Drizzle', icon: '\u{1F326}️' };
+  if (code >= 61 && code <= 67) return { text: 'Rain', icon: '\u{1F327}️' };
+  if (code >= 71 && code <= 77) return { text: 'Snow', icon: '\u{1F328}️' };
+  if (code >= 80 && code <= 82) return { text: 'Rain showers', icon: '\u{1F326}️' };
+  if (code === 85 || code === 86) return { text: 'Snow showers', icon: '\u{1F328}️' };
+  if (code >= 95 && code <= 99) return { text: 'Thunderstorm', icon: '⛈️' };
+  return { text: 'Conditions unavailable', icon: '❓' };
+}
+
+// Fetch and validate the weather data. Throws an Error on any problem;
+// the caller decides how to show it to the user.
+async function fetchWeather() {
+  // AbortController cancels the request if the network hangs for more than 8 seconds
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    const response = await fetch(WEATHER_URL, { signal: controller.signal });
+
+    // fetch() only rejects on network failure; HTTP errors (404, 500...) still
+    // "succeed", so response.ok must be checked by hand
+    if (!response.ok) {
+      throw new Error(`Weather service returned HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Confirm the pieces we need are really there before using them
+    if (!data.current || !data.daily || !Array.isArray(data.daily.time)) {
+      throw new Error('Weather data was in an unexpected format');
+    }
+    return data;
+  } finally {
+    // Always clear the timer, whether the request worked or failed
+    clearTimeout(timer);
+  }
+}
+
+// Turn the API response into DOM elements inside the weather widget
+function renderWeather(container, data) {
+  const now = describeWeather(data.current.weather_code);
+
+  // Current conditions line, e.g. "72°F · Partly cloudy"
+  const current = el('p', 'weather-current');
+  const icon = el('span', 'weather-icon', now.icon);
+  icon.setAttribute('aria-hidden', 'true'); // the text next to it already says the same thing
+  current.append(
+    icon,
+    el('strong', '', `${Math.round(data.current.temperature_2m)}°F`),
+    ` · ${now.text}`
+  );
+
+  // 3-day forecast: skip index 0 (today), show the next three days
+  const forecast = el('ul', 'forecast-row list-unstyled mb-0');
+  for (let i = 1; i <= 3 && i < data.daily.time.length; i++) {
+    const day = parseLocalDate(data.daily.time[i]).toLocaleDateString('en-US', { weekday: 'short' });
+    const info = describeWeather(data.daily.weather_code[i]);
+    const tile = el('li', 'forecast-tile');
+    const tileIcon = el('span', 'weather-icon', info.icon);
+    tileIcon.setAttribute('aria-label', info.text);
+    tileIcon.setAttribute('role', 'img');
+    tile.append(
+      el('strong', '', day),
+      tileIcon,
+      el('span', 'small', `${Math.round(data.daily.temperature_2m_max[i])}° / ${Math.round(data.daily.temperature_2m_min[i])}°`)
+    );
+    forecast.append(tile);
+  }
+
+  container.replaceChildren(current, forecast);
+}
+
+// Show the loading state, fetch, then render or show the error fallback
+async function loadWeather(container) {
+  container.replaceChildren(el('p', 'text-muted mb-0', 'Loading weather…'));
+
+  try {
+    const data = await fetchWeather();
+    renderWeather(container, data);
+  } catch (err) {
+    // Log the technical detail for debugging; show the user something friendly
+    console.warn('Weather request failed:', err);
+
+    const message = el('p', 'mb-2', 'Sorry, we couldn’t load the weather right now. Please check your connection and try again.');
+    const retry = el('button', 'btn btn-sm btn-outline-primary', 'Try again');
+    retry.type = 'button';
+    retry.addEventListener('click', () => loadWeather(container));
+    container.replaceChildren(message, retry);
+  }
+}
+
+function initWeather() {
+  const container = document.getElementById('weather');
+  if (container) loadWeather(container);
+}
+
+/* ==========================================================================
+   9. SECOND API (PLACEHOLDER - In progress): Nager.Date public holidays
+   Free, no API key. Will fill "Upcoming holidays / breaks" on events.html and
+   the "Next holiday" card on the home page. Not called yet.
+   Docs: https://date.nager.at/Api
+   ========================================================================== */
+const HOLIDAYS_URL = 'https://date.nager.at/api/v3/NextPublicHolidays/US';
+
+async function fetchHolidays() {
+  // TODO: const response = await fetch(HOLIDAYS_URL);
+  // TODO: check response.ok and throw on failure (same pattern as fetchWeather)
+  // TODO: parse the JSON array and return the next 3 items ({ date, localName })
+  // TODO: render them into the events.html sidebar, with a friendly error message
+  return [];
+}
+
+/* ==========================================================================
+   10. START-UP: run each section once the page's HTML is ready
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
   initTodayDate();
+  initWeather();
   initEvents();
   initSpotList();
   initMealFilter();
