@@ -62,18 +62,18 @@
     <p id="diningClock" class="text-muted">Live clock and open/closed status <span class="badge text-bg-secondary">In progress</span></p>
 
     <!-- Meal-type filter chips -->
-    <div class="chip-row mb-4" role="group" aria-label="Show meal">
+    <div class="chip-row mb-4" role="group" aria-label="Show meal" id="mealChips">
       <span class="me-2 fw-semibold">Show meal:</span>
-      <button type="button" class="btn btn-sm btn-outline-primary chip active" aria-pressed="true">All</button>
-      <button type="button" class="btn btn-sm btn-outline-primary chip" aria-pressed="false">Breakfast</button>
-      <button type="button" class="btn btn-sm btn-outline-primary chip" aria-pressed="false">Lunch</button>
-      <button type="button" class="btn btn-sm btn-outline-primary chip" aria-pressed="false">Dinner</button>
-      <button type="button" class="btn btn-sm btn-outline-primary chip" aria-pressed="false">Late night</button>
+      <button type="button" class="btn btn-sm btn-outline-primary chip active" data-meal="all" aria-pressed="true">All</button>
+      <button type="button" class="btn btn-sm btn-outline-primary chip" data-meal="breakfast" aria-pressed="false">Breakfast</button>
+      <button type="button" class="btn btn-sm btn-outline-primary chip" data-meal="lunch" aria-pressed="false">Lunch</button>
+      <button type="button" class="btn btn-sm btn-outline-primary chip" data-meal="dinner" aria-pressed="false">Dinner</button>
+      <button type="button" class="btn btn-sm btn-outline-primary chip" data-meal="late-night" aria-pressed="false">Late night</button>
     </div>
 
     <!-- One card per dining location (placeholder hours until dining data is added) -->
     <section class="row g-4 mb-5" aria-label="Dining locations">
-      <article class="col-md-6 col-lg-4">
+      <article class="col-md-6 col-lg-4 dining-card" data-meals="breakfast lunch dinner">
         <div class="card h-100">
           <img src="images/dining-hall.svg" class="card-img-top" alt="Placeholder image of the dining hall" width="600" height="300">
           <div class="card-body">
@@ -86,7 +86,7 @@
           </div>
         </div>
       </article>
-      <article class="col-md-6 col-lg-4">
+      <article class="col-md-6 col-lg-4 dining-card" data-meals="lunch dinner">
         <div class="card h-100">
           <img src="images/cafe.svg" class="card-img-top" alt="Placeholder image of the cafe" width="600" height="300">
           <div class="card-body">
@@ -99,7 +99,7 @@
           </div>
         </div>
       </article>
-      <article class="col-md-6 col-lg-4">
+      <article class="col-md-6 col-lg-4 dining-card" data-meals="breakfast late-night">
         <div class="card h-100">
           <img src="images/grab-and-go.svg" class="card-img-top" alt="Placeholder image of the grab and go counter" width="600" height="300">
           <div class="card-body">
